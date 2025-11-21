@@ -1,5 +1,5 @@
 /**
- * vscode расширение Indentation helper для форматирования отступов в выделенном тексте
+ * VS Code расширение Indentation helper для форматирования отступов в выделенном тексте
  * Преобразует горизонтально перечисляемые элементы через `,` в вертикально перечисляемые
  */
 
@@ -56,8 +56,9 @@ async function command() {
 }
 
 /**
- * Активирует расширение при его запуске в vscode
+ * Активирует расширение при его запуске в VS Code
  * @param {vscode.ExtensionContext} context - Контекст расширения vscode
+ * @returns {Promise<void>}
  */
 function activate(context) {
     context.subscriptions.push(
