@@ -1,0 +1,24 @@
+{
+    "name": "indentation-helper",
+    "displayName": "Indentation helper",
+    "description": "Helps with the indentation",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "indentation-helper.fix-indentation",
+                "title": "Fix indentation in selected Text..."
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "indentation-helper.fix-indentation",
+                "key": "ctrl+shift+r"
+            }
+        ]
+    }
+}
