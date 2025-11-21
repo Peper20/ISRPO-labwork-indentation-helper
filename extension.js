@@ -1,9 +1,24 @@
+/**
+ * vscode расширение Indentation helper для форматирования отступов в выделенном тексте
+ * Преобразует горизонтально перечисляемые элементы через `,` в вертикально перечисляемые
+ */
+
 const vscode = require('vscode');
 
+/**
+ * Определяет отступы в начале строки
+ * @param {vscode.TextLine} line - Строка в vscode
+ * @returns {string} Строка с пробельными символами в начале строки
+ */
 function getIndent(line) {
-    return line.text.match(/^\s*/)[0] || ''
+    return line.text.match(/^\s*/)[0] || '';
 }
 
+/**
+ * Форматирует текст, преобразуя горизонтальный список в вертикальный
+ * @param {string} text - Исходный текст для форматирования
+ * @returns {string} Отформатированный текст
+ */
 function getFixedText(text) {
     const indent = getIndent(editor.document.lineAt(selection.start.line));
 
@@ -14,30 +29,40 @@ function getFixedText(text) {
     fixedText += indent;
 }
 
-function activate(context) {
-    let command = vscode.commands.registerCommand('indentation-helper.fix-indentation', async function () {
-        const editor = vscode.window.activeTextEditor;
-        
-        if (!editor) {
-            vscode.window.showErrorMessage('Нет активного редактора');
-            return;
-        }
+/**
+ * Обработчик команды для форматирования в выделенном тексте
+ * @returns {Promise<void>}
+ */
+async function command() {
+    const editor = vscode.window.activeTextEditor;
+    
+    if (!editor) {
+        vscode.window.showErrorMessage('Нет активного редактора');
+        return;
+    }
 
-        const selection = editor.selection;
-        
-        if (selection.isEmpty) {
-            vscode.window.showErrorMessage('Выделите текст для замены');
-            return;
-        }
+    const selection = editor.selection;
+    
+    if (selection.isEmpty) {
+        vscode.window.showErrorMessage('Выделите текст для замены');
+        return;
+    }
 
-        const text = editor.document.getText(selection);
+    const text = editor.document.getText(selection);
 
-        await editor.edit(editBuilder => {
-            editBuilder.replace(selection, getFixedText(text));
-        });
+    await editor.edit(editBuilder => {
+        editBuilder.replace(selection, getFixedText(text));
     });
+}
 
-    context.subscriptions.push(command);
+/**
+ * Активирует расширение при его запуске в vscode
+ * @param {vscode.ExtensionContext} context - Контекст расширения vscode
+ */
+function activate(context) {
+    context.subscriptions.push(
+        vscode.commands.registerCommand('indentation-helper.fix-indentation', command)
+    );
 }
 
 module.exports = {
