@@ -1,5 +1,19 @@
 const vscode = require('vscode');
 
+function getIndent(line) {
+    return line.text.match(/^\s*/)[0] || ''
+}
+
+function getFixedText(text) {
+    const indent = getIndent(editor.document.lineAt(selection.start.line));
+
+    let fixedText = '\n';
+    for (const i of text.split(',')) {
+        fixedText += indent + '    ' + i.trim() + ',\n';
+    }
+    fixedText += indent;
+}
+
 function activate(context) {
     let command = vscode.commands.registerCommand('indentation-helper.fix-indentation', async function () {
         const editor = vscode.window.activeTextEditor;
@@ -18,13 +32,8 @@ function activate(context) {
 
         const text = editor.document.getText(selection);
 
-        let fixedText = '\n';
-        for (const i of text.split(',')) {
-            fixedText += '    ' + i.trim() + ',\n';
-        }
-
         await editor.edit(editBuilder => {
-            editBuilder.replace(selection, fixedText);
+            editBuilder.replace(selection, getFixedText(text));
         });
     });
 
