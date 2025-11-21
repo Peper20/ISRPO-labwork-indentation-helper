@@ -16,17 +16,19 @@ function getIndent(line) {
 
 /**
  * Форматирует текст, преобразуя горизонтальный список в вертикальный
- * @param {string} text - Исходный текст для форматирования
+ * @param {vscode.TextEditor} editor - Активный редактор
+ * @param {vscode.Selection} selection - Выделение исходного текста
  * @returns {string} Отформатированный текст
  */
-function getFixedText(text) {
+function getFixedText(editor, selection) {
     const indent = getIndent(editor.document.lineAt(selection.start.line));
-
+    const text = editor.document.getText(selection);
     let fixedText = '\n';
     for (const i of text.split(',')) {
         fixedText += indent + '    ' + i.trim() + ',\n';
     }
     fixedText += indent;
+    return fixedText;
 }
 
 /**
@@ -48,10 +50,8 @@ async function command() {
         return;
     }
 
-    const text = editor.document.getText(selection);
-
     await editor.edit(editBuilder => {
-        editBuilder.replace(selection, getFixedText(text));
+        editBuilder.replace(selection, getFixedText(editor, selection));
     });
 }
 
